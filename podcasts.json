@@ -4,4 +4,10 @@
     "author": {"name": "Jason Cordova", "email": "email@example.com"},
     "description": "Youtube feed converted to audio only",
     "channel_id": "UCX9_7QNogzZ6r1cCkPGVCaA"
+},{
+    "title": "Total Party Kiss Actual Play Youtube",
+    "location": "podcasts/tpk",
+    "author": {"name": "Total Party Kiss", "email": "email@example.com"},
+    "description": "Youtube feed converted to audio only",
+    "channel_id": "UC0ekuNwrjkPr5EGom2_XFLA"
 }]

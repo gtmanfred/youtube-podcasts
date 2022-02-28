@@ -12,7 +12,6 @@ from feedgen.feed import FeedGenerator
 
 BUCKET_NAME = 'podcasts.gtmanfred.com'
 BUCKET = boto3.resource('s3').Bucket(name=BUCKET_NAME)
-PODCASTS = json.load(BUCKET.Object(key='podcasts.json').get()['Body'])
 
 UUID = uuid.UUID('ad6a3bfa-299a-4618-a84c-da2b145b26fd')
 
@@ -32,7 +31,8 @@ def main(location):
     fg = FeedGenerator()
     fg.load_extension('podcast')
 
-    for podcast in PODCASTS:
+    podcasts = json.load(BUCKET.Object(key='podcasts.json').get()['Body'])
+    for podcast in podcasts:
         if podcast['location'] == location:
             break
     else:
@@ -47,6 +47,8 @@ def main(location):
 
     for objsum in BUCKET.objects.all():
         if not objsum.key.endswith('mp3'):
+            continue
+        if not objsum.key.startswith(location):
             continue
         obj = objsum.Object()
         print(obj.metadata)
@@ -87,4 +89,4 @@ def handler(event, context):
 
 
 if __name__ == '__main__':
-    main('podcasts/jasoncordova')
+    main('podcasts/tpk')
