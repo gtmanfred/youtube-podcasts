@@ -5,6 +5,7 @@ import feedparser
 
 BUCKET_NAME = 'podcasts.gtmanfred.com'
 BUCKET = boto3.resource('s3').Bucket(name=BUCKET_NAME)
+s3 = boto3.client('s3')
 
 client = boto3.client('lambda')
 
@@ -16,7 +17,10 @@ def main():
         feed_url = f'https://www.youtube.com/feeds/videos.xml?channel_id={podcast["channel_id"]}'
         feed = feedparser.parse(feed_url)
 
-        new_last = last = BUCKET.Object(key=f'{podcast["location"]}/last.txt').get()['Body'].read().decode('utf-8').strip()
+        try:
+            new_last = last = BUCKET.Object(key=f'{podcast["location"]}/last.txt').get()['Body'].read().decode('utf-8').strip()
+        except client.exceptions.NoSuchKey:
+            last = None
         for idx, item in enumerate(feed.entries):
             if item.yt_videoid == last:
                 break
