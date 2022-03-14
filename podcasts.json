@@ -10,4 +10,10 @@
     "author": {"name": "Total Party Kiss", "email": "email@example.com"},
     "description": "Youtube feed converted to audio only",
     "channel_id": "UC0ekuNwrjkPr5EGom2_XFLA"
+},{
+    "title": "Crit Fail Safe Actual Play Youtube",
+    "location": "podcasts/crit-fail-safe",
+    "author": {"name": "Crit Fail Safe", "email": "email@example.com"},
+    "description": "Youtube feed converted to audio only",
+    "channel_id": "UCdQbWFeiLgq2EQ2gIZX_YGw"
 }]
