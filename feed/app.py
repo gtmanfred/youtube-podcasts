@@ -19,7 +19,7 @@ def main():
 
         try:
             new_last = last = BUCKET.Object(key=f'{podcast["location"]}/last.txt').get()['Body'].read().decode('utf-8').strip()
-        except client.exceptions.NoSuchKey:
+        except s3.exceptions.NoSuchKey:
             last = None
         for idx, item in enumerate(feed.entries):
             if item.yt_videoid == last:

@@ -51,5 +51,5 @@ def main(channel_id):
 
 
 if __name__ == '__main__':
-    CHANNEL_ID = 'UC0ekuNwrjkPr5EGom2_XFLA'
+    CHANNEL_ID = 'UCUUC1SxlL-z2GWrzm8gIdYA'
     main(CHANNEL_ID)
