@@ -49,4 +49,4 @@ jobs:
       env:
         IMAGE_URI: ${{ steps.build.outputs.image }}
       run: |
-        echo aws lambda update-function-code arn:aws:lambda:us-east-1:${{ secrets.AWS_ACCOUNT_ID }}:function:${{ matrix.function}} ${{IMAGE_URI}}
+        echo aws lambda update-function-code arn:aws:lambda:us-east-1:${{ secrets.AWS_ACCOUNT_ID }}:function:${{ matrix.function}} $IMAGE_URI
