@@ -32,11 +32,18 @@ def _get_location(channel_id):
     raise Exception('Podcast not found')
 
 
-def main(channel_id):
+def _parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--channel-id', '-c')
+    return parser.parse_args()
+
+
+def main():
+    args = _parse_args()
     token = False
-    location = _get_location(channel_id)
+    location = _get_location(args.channel_id)
     while token is not None:
-        videos = _get_channel(channel_id, token)
+        videos = _get_channel(args.channel_id, token)
         for video in videos['items']:
             if video['id']['kind'] == 'youtube#video':
                 print(client.invoke(
@@ -51,5 +58,4 @@ def main(channel_id):
 
 
 if __name__ == '__main__':
-    CHANNEL_ID = 'UCUUC1SxlL-z2GWrzm8gIdYA'
-    main(CHANNEL_ID)
+    main()
