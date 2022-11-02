@@ -22,7 +22,7 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v2
-    
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -42,11 +42,29 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ${{ matrix.app }}
-        # docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
     - name: update-function
       env:
         IMAGE_URI: ${{ steps.build.outputs.image }}
       run: |
-        echo aws lambda update-function-code arn:aws:lambda:us-east-1:${{ secrets.AWS_ACCOUNT_ID }}:function:${{ matrix.function}} $IMAGE_URI
+        aws lambda update-function-code arn:aws:lambda:us-east-1:${{ secrets.AWS_ACCOUNT_ID }}:function:${{ matrix.function}} $IMAGE_URI
+
+  upload-podcasts-config:
+    name: Upload podcasts.json for config
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Upload file
+      run: |
+        aws s3 cp podcasts.json s3://podcasts.gtmanfred.com/podcasts.json

@@ -18,8 +18,8 @@
     "channel_id": "UCdQbWFeiLgq2EQ2gIZX_YGw"
 },{
     "title": "Holy Happy Hour, Batman!",
-	"location": "podcasts/holy-happy-hour",
-	"author": {"name": "fatherben", "email": "email@example.com"},
-	"description": "Youtube feed converted to audio only",
-	"channel_id": "UCUUC1SxlL-z2GWrzm8gIdYA"
+    "location": "podcasts/holy-happy-hour",
+    "author": {"name": "fatherben", "email": "email@example.com"},
+    "description": "Youtube feed converted to audio only",
+    "channel_id": "UCUUC1SxlL-z2GWrzm8gIdYA"
 }]
