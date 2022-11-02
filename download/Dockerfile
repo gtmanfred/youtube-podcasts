@@ -1,14 +1,6 @@
-FROM public.ecr.aws/lambda/python:3.8 as ffmpeg
-
-# add FFMPEG
-RUN yum install -y tar xz
-RUN curl -s https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar xJ
-RUN cp ffmpeg-*/ffmpeg /bin/ffmpeg
-RUN rm -rf ffmpeg-*
-
 FROM public.ecr.aws/lambda/python:3.8
 
-COPY --from=ffmpeg /bin/ffmpeg /bin/ffmpeg
+COPY --from=mwader/static-ffmpeg /ffmpeg /bin/ffmpeg
 
 # Install the function's dependencies using file requirements.txt
 # from your project folder.
