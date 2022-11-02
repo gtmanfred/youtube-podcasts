@@ -49,7 +49,7 @@ jobs:
       env:
         IMAGE_URI: ${{ steps.build.outputs.image }}
       run: |
-        aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:${{ secrets.AWS_ACCOUNT_ID }}:function:${{ matrix.function}} $IMAGE_URI
+        aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:${{ secrets.AWS_ACCOUNT_ID }}:function:${{ matrix.function}} --image-uri $IMAGE_URI
 
   upload-podcasts-config:
     name: Upload podcasts.json for config
