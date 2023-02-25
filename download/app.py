@@ -54,7 +54,8 @@ def _get_video(videoid):
 def main(videoid, location):
     while subprocess.run((
         'python3 -m yt_dlp -c -x --embed-thumbnail '
-        '--audio-format mp3 -o "/tmp/%(title)s[%(id)s].%(ext)s" -- '
+        '--audio-format mp3 -o "/tmp/%(title)s[%(id)s].%(ext)s" '
+        '--cache-dir /tmp/yt-dlp/ -- '
         f'{videoid}'
     ), shell=True).returncode:
         time.sleep(5)
