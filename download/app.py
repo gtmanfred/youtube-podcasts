@@ -90,7 +90,10 @@ def main(videoid, location):
 def handler(event, context):
     print(event, context)
 
-    if not isinstance(event, dict):
+    if isinstance(event, dict):
+        if 'queryStringParameters' in event:
+            return {'statusCode': 200, 'body': ''}
+    else:
         entry = ET.fromstring(event).find("atom:entry", NAMESPACE)
         videoid = entry.get('yt:videoId', NAMESPACE)
         channel_id = entry.get('yt:channelId', NAMESPACE)
