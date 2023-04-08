@@ -6,11 +6,18 @@ import time
 from datetime import datetime
 from urllib.request import Request
 from urllib.request import urlopen
+from xml.etree import ElementTree as ET
 
 import boto3
 
 BUCKET_NAME = 'podcasts.gtmanfred.com'
 BUCKET = boto3.resource('s3').Bucket(name=BUCKET_NAME)
+
+NAMESPACE = {
+    'atom': 'http://www.w3.org/2005/Atom',
+    'yt': 'http://www.youtube.com/xml/schemas/2015',
+}
+PODCASTS = json.load(BUCKET.Object(key='podcasts.json').get()['Body'])
 
 APIKEY = os.getenv('YOUTUBE_API_KEY')
 
@@ -82,6 +89,21 @@ def main(videoid, location):
 
 def handler(event, context):
     print(event, context)
+
+    if not isinstance(event, dict):
+        entry = ET.fromstring(event).find("atom:entry", NAMESPACE)
+        videoid = entry.get('yt:videoId', NAMESPACE)
+        channel_id = entry.get('yt:channelId', NAMESPACE)
+        for podcast in PODCASTS:
+            if podcast['channel_id'] == channel_id:
+                event = {
+                    'videoid': videoid,
+                    'location': podcast['location'],
+                }
+                break
+        else:
+            raise Exception('podcast not tracked')
+
     main(**event)
 
 
