@@ -91,8 +91,8 @@ def handler(event, context):
     print(event, context)
 
     if isinstance(event, dict):
-        if 'queryStringParameters' in event:
-            return {'statusCode': 200, 'body': ''}
+        if params := event.get('queryStringParameters'):
+            return {'statusCode': 200, 'body': params['hub.challenge']}
     else:
         entry = ET.fromstring(event).find("atom:entry", NAMESPACE)
         videoid = entry.get('yt:videoId', NAMESPACE)
