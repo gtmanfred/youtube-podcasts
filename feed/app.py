@@ -36,12 +36,12 @@ def main():
                 })
             ))
         BUCKET.Object(key=f'{podcast["location"]}/last.txt').put(Body=new_last.encode('utf-8'))
-        
 
 
 def handler(event, context):
     print(event, context)
     main()
+    return {'statusCode': 200, 'body': ''}
 
 
 if __name__ == '__main__':
