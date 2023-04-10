@@ -90,20 +90,19 @@ def main(videoid, location):
 def handler(event, context):
     print(event, context)
 
-    if isinstance(event, dict):
-        if params := event.get('queryStringParameters'):
-            return {'statusCode': 200, 'body': params['hub.challenge']}
-    else:
-        entry = ET.fromstring(event).find("atom:entry", NAMESPACE)
-        videoid = entry.get('yt:videoId', NAMESPACE)
-        channel_id = entry.get('yt:channelId', NAMESPACE)
+    if params := event.get('queryStringParameters'):
+        return {'statusCode': 200, 'body': params['hub.challenge']}
+    elif body := event.get('body')
+        entry = ET.fromstring(body).find("atom:entry", NAMESPACE)
+        videoid = entry.find('yt:videoId', NAMESPACE).text
+        channel_id = entry.find('yt:channelId', NAMESPACE).text
         for podcast in PODCASTS:
             if podcast['channel_id'] == channel_id:
-                event = {
-                    'videoid': videoid,
-                    'location': podcast['location'],
-                }
-                break
+            event = {
+                'videoid': videoid,
+                'location': podcast['location'],
+            }
+            break
         else:
             raise Exception('podcast not tracked')
 
