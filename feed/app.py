@@ -71,7 +71,7 @@ def handler(event, context):
     elif headers.get("Content-Type", "") == "application/atom+xml" and body:
         entry = ET.fromstring(body).find("atom:entry", NAMESPACE)
         videoid = entry.find("yt:videoId", NAMESPACE).text
-        title = entry.find("title", NAMESPACE).text
+        title = entry.find("atom:title", NAMESPACE).text
         channel_id = entry.find("yt:channelId", NAMESPACE).text
         for podcast in PODCASTS:
             if podcast["channel_id"] == channel_id:
