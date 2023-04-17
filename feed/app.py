@@ -26,21 +26,48 @@ def main():
                 break
             if idx == 0:
                 new_last = item.yt_videoid
-            print(f'Processing: {item.title}')
-            print(client.invoke(
-                FunctionName='download-youtube-audio',
-                InvocationType='Event',
-                Payload=json.dumps({
-                    'videoid': item.yt_videoid,
-                    'location': podcast['location'],
-                })
-            ))
+            queue_video(item.title, item.yt_videoid, podcast['location'])
         BUCKET.Object(key=f'{podcast["location"]}/last.txt').put(Body=new_last.encode('utf-8'))
+
+
+def queue_video(title, videoid, location):
+    print(f'Processing: {title}')
+    print(client.invoke(
+        FunctionName='download-youtube-audio',
+        InvocationType='Event',
+        Payload=json.dumps({
+            'videoid': yt_videoid,
+            'location': location,
+        })
+    ))
 
 
 def handler(event, context):
     print(event, context)
-    main()
+
+    params = event.get('queryStringParameters')
+    body = event.get('body')
+    headers = event.get('headers', {})
+
+    if params:
+        return {'statusCode': 200, 'body': params['hub.challenge']}
+    elif headers.get('Content-Type', '') == 'application/atom+xml' and body:
+        entry = ET.fromstring(body).find("atom:entry", NAMESPACE)
+        videoid = entry.find('yt:videoId', NAMESPACE).text
+        title = entry.find('title', NAMESPACE).text
+        channel_id = entry.find('yt:channelId', NAMESPACE).text
+        for podcast in PODCASTS:
+            if podcast['channel_id'] == channel_id:
+                event = {
+                    'videoid': videoid,
+                    'location': podcast['location'],
+                }
+                break
+        else:
+            raise Exception('podcast not tracked')
+        queue_video(title, videoid, podcast['location'])
+    else:
+        main()
     return {'statusCode': 200, 'body': ''}
 
 
