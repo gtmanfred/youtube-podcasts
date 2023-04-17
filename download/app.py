@@ -90,9 +90,11 @@ def main(videoid, location):
 def handler(event, context):
     print(event, context)
 
-    if params := event.get('queryStringParameters'):
+    params = event.get('queryStringParameters')
+    body = event.get('body')
+    if params:
         return {'statusCode': 200, 'body': params['hub.challenge']}
-    elif body := event.get('body')
+    elif body:
         entry = ET.fromstring(body).find("atom:entry", NAMESPACE)
         videoid = entry.find('yt:videoId', NAMESPACE).text
         channel_id = entry.find('yt:channelId', NAMESPACE).text
