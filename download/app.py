@@ -100,11 +100,11 @@ def handler(event, context):
         channel_id = entry.find('yt:channelId', NAMESPACE).text
         for podcast in PODCASTS:
             if podcast['channel_id'] == channel_id:
-            event = {
-                'videoid': videoid,
-                'location': podcast['location'],
-            }
-            break
+                event = {
+                    'videoid': videoid,
+                    'location': podcast['location'],
+                }
+                break
         else:
             raise Exception('podcast not tracked')
 
