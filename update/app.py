@@ -13,6 +13,9 @@ from feedgen.feed import FeedGenerator
 BUCKET_NAME = "podcasts.gtmanfred.com"
 BUCKET = boto3.resource("s3").Bucket(name=BUCKET_NAME)
 
+CLOUDFRONT = boto3.client("cloudfront")
+
+
 UUID = uuid.UUID("ad6a3bfa-299a-4618-a84c-da2b145b26fd")
 
 APIKEY = os.getenv("YOUTUBE_API_KEY")
@@ -79,6 +82,16 @@ def main(location):
         ExtraArgs={
             "ContentType": "text/xml",
         },
+    )
+    CLOUDFRONT.create_invalidation(
+        DistributionId="E31WFS9CP7QRX1",
+        InvalidationBatch={
+            "Paths": {
+                "Quantity": 1,
+                "Items": [f"/{location}/{os.path.basename(xml)}"],
+            },
+        },
+        CallerReference=uuid.uuid4().hex,
     )
 
 
