@@ -2,6 +2,7 @@ import argparse
 import functools
 import json
 import os
+import time
 from urllib.request import Request
 from urllib.request import urlopen
 
@@ -23,6 +24,17 @@ def _get_channel(channel_id, token=None):
     return json.load(urlopen(req))
 
 
+def _get_playlist(playlist_id, token=None):
+    url = f"https://www.googleapis.com/youtube/v3/search?key={APIKEY}&part=id&playlistId={playlist_id}"
+    if token:
+        url += f"&pageToken={token}"
+    req = Request(
+        method="GET",
+        url=url,
+    )
+    return json.load(urlopen(req))
+
+
 def _get_location(channel_id):
     with open("podcasts.json") as fh_:
         podcasts = json.load(fh_)
@@ -35,6 +47,7 @@ def _get_location(channel_id):
 def _parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--channel-id", "-c")
+    parser.add_argument("--playlist-id", "-p", default=None)
     return parser.parse_args()
 
 
@@ -43,9 +56,14 @@ def main():
     token = False
     location = _get_location(args.channel_id)
     while token is not None:
-        videos = _get_channel(args.channel_id, token)
+        if args.playlist_id:
+            videos = _get_playlist(args.playlist_id, token)
+        else:
+            videos = _get_channel(args.channel_id, token)
         for video in videos["items"]:
             if video["id"]["kind"] == "youtube#video":
+                print(video)
+                continue
                 print(
                     client.invoke(
                         FunctionName="download-youtube-audio",
@@ -59,6 +77,7 @@ def main():
                     )
                 )
         token = videos.get("nextPageToken", None)
+        time.sleep(1)
 
 
 if __name__ == "__main__":

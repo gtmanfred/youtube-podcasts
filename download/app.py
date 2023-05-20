@@ -75,6 +75,7 @@ def main(videoid, location):
                 "title": video["snippet"]["title"],
                 "duration": _duration(video["contentDetails"]["duration"]),
                 "image": video["snippet"]["thumbnails"]["default"]["url"],
+                "description": video["snippet"]["description"],
             },
             "ContentType": "audio/mpeg",
         },

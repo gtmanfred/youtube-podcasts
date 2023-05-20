@@ -55,12 +55,23 @@ def main(location):
             continue
         obj = objsum.Object()
         print(obj.metadata)
-        video = _get_video(obj.metadata["videoid"])
         fe = fg.add_entry()
         name = os.path.basename(obj.key)
         fe.id(uuid.uuid5(UUID, name).hex)
         fe.title(obj.metadata["title"])
-        description = video["snippet"]["description"]
+        description = obj.metadata.get("description", None)
+        if description is None:
+            video = _get_video(obj.metadata["videoid"])
+            description = video["snippet"]["description"]
+            obj.metadata.update({"description": description"})
+            obj.copy_from(
+                CopySource={
+                    'Bucket': BUCKET_NAME,
+                    'Key': obj.key,
+                },
+                Metadata=obj.metadata,
+                MetadataDirective='REPLACE',
+            )
         if isinstance(description, bytes):
             description = description.decode("utf-8")
         fe.description(description)

@@ -17,6 +17,13 @@
     "description": "Youtube feed converted to audio only",
     "channel_id": "UCdQbWFeiLgq2EQ2gIZX_YGw"
 },{
+    "title": "Marc Majcher's Actual Play Youtube",
+    "author": {"name": "Marc Majcher", "email": "email@example.com"},
+    "description": "Youtube feed converted to audio only",
+    "channel_id": "UC0itxnJW6eBUthd1PcLfZJw",
+    "location": "podcasts/marcmajcher",
+    "playlist": "PL3Gs6F6p2DrduoeJJbDTOaaZQK44JvLuR"
+},{
     "title": "Holy Happy Hour, Batman!",
     "location": "podcasts/holy-happy-hour",
     "author": {"name": "fatherben", "email": "email@example.com"},
