@@ -63,7 +63,7 @@ def main(location):
         if description is None:
             video = _get_video(obj.metadata["videoid"])
             description = video["snippet"]["description"]
-            obj.metadata.update({"description": description"})
+            obj.metadata.update({"description": description})
             obj.copy_from(
                 CopySource={
                     'Bucket': BUCKET_NAME,

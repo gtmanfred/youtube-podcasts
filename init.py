@@ -14,7 +14,7 @@ client = boto3.client("lambda")
 
 
 def _get_channel(channel_id, token=None):
-    url = f"https://www.googleapis.com/youtube/v3/search?key={APIKEY}&part=id&channelId={channel_id}"
+    url = f"https://www.googleapis.com/youtube/v3/search?key={APIKEY}&part=id&type=video&channelId={channel_id}"
     if token:
         url += f"&pageToken={token}"
     req = Request(
@@ -25,7 +25,7 @@ def _get_channel(channel_id, token=None):
 
 
 def _get_playlist(playlist_id, token=None):
-    url = f"https://www.googleapis.com/youtube/v3/search?key={APIKEY}&part=id&playlistId={playlist_id}"
+    url = f"https://www.googleapis.com/youtube/v3/playlistItems?key={APIKEY}&part=snippet&playlistId={playlist_id}"
     if token:
         url += f"&pageToken={token}"
     req = Request(
@@ -51,6 +51,19 @@ def _parse_args():
     return parser.parse_args()
 
 
+def _queue_video(video, location):
+    return client.invoke(
+        FunctionName="download-youtube-audio",
+        InvocationType="Event",
+        Payload=json.dumps(
+            {
+                "videoid": video,
+                "location": location,
+            }
+        ),
+    )
+
+
 def main():
     args = _parse_args()
     token = False
@@ -58,26 +71,14 @@ def main():
     while token is not None:
         if args.playlist_id:
             videos = _get_playlist(args.playlist_id, token)
+            for video in videos["items"]:
+                print(_queue_video(video["snippet"]["resourceId"]["videoId"], location))
         else:
             videos = _get_channel(args.channel_id, token)
-        for video in videos["items"]:
-            if video["id"]["kind"] == "youtube#video":
-                print(video)
-                continue
-                print(
-                    client.invoke(
-                        FunctionName="download-youtube-audio",
-                        InvocationType="Event",
-                        Payload=json.dumps(
-                            {
-                                "videoid": video["id"]["videoId"],
-                                "location": location,
-                            }
-                        ),
-                    )
-                )
+            for video in videos["items"]:
+                if video["id"]["kind"] == "youtube#video":
+                    print(_queue_video(video["id"]["videoId"], location))
         token = videos.get("nextPageToken", None)
-        time.sleep(1)
 
 
 if __name__ == "__main__":
