@@ -1,3 +1,4 @@
+import base64
 import glob
 import json
 import os
@@ -75,7 +76,7 @@ def main(videoid, location):
                 "title": video["snippet"]["title"],
                 "duration": _duration(video["contentDetails"]["duration"]),
                 "image": video["snippet"]["thumbnails"]["default"]["url"],
-                "description": video["snippet"]["description"],
+                "description": base64.b64encode(video["snippet"]["description"].encode("utf-8")),
             },
             "ContentType": "audio/mpeg",
         },

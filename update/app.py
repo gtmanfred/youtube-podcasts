@@ -60,10 +60,15 @@ def main(location):
         fe.id(uuid.uuid5(UUID, name).hex)
         fe.title(obj.metadata["title"])
         description = obj.metadata.get("description", None)
+        if description is not None:
+            try:
+                description = base64.b64decode(description).encode("utf-8")
+            except UnicodeDecodeError:
+                description = None
         if description is None:
             video = _get_video(obj.metadata["videoid"])
             description = video["snippet"]["description"]
-            obj.metadata.update({"description": description})
+            obj.metadata.update({"description": base64.b64encode(description.decode("utf-8"})
             obj.copy_from(
                 CopySource={
                     'Bucket': BUCKET_NAME,
