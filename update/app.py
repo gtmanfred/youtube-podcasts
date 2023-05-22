@@ -61,12 +61,9 @@ def main(location):
         fe.id(uuid.uuid5(UUID, name).hex)
         fe.title(obj.metadata["title"])
         description = obj.metadata.get("description", None)
-        if description is not None:
-            try:
-                description = base64.b64decode(description).encode("utf-8")
-            except UnicodeDecodeError:
-                description = None
-        if description is None:
+        if description is not None and " " not in description:
+	    description = base64.b64decode(description).decode("utf-8")
+        else:
             video = _get_video(obj.metadata["videoid"])
             description = video["snippet"]["description"]
             obj.metadata.update({"description": base64.b64encode(description.encode("utf-8")).decode("utf-8")})
@@ -78,8 +75,6 @@ def main(location):
                 Metadata=obj.metadata,
                 MetadataDirective='REPLACE',
             )
-        if isinstance(description, bytes):
-            description = description.decode("utf-8")
         fe.description(description)
         fe.enclosure(f"{base_url}/{quote(name)}", 0, "audio/mpeg")
         fe.pubDate(
