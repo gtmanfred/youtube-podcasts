@@ -108,6 +108,7 @@ def main(location):
 
 def handler(event, context):
     print(event, context)
+    return
     location = os.path.dirname(event["Records"][0]["s3"]["object"]["key"])
     main(location)
 
