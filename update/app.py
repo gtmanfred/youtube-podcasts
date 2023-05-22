@@ -111,12 +111,7 @@ def main(location):
 
 def handler(event, context):
     print(event, context)
-    if event.get('skip', True):
-        return
-    try:
-        location = os.path.dirname(event["Records"][0]["s3"]["object"]["key"])
-    except Exception:
-        return
+    location = os.path.dirname(event["Records"][0]["s3"]["object"]["key"])
     main(location)
 
 
