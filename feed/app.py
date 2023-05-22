@@ -17,10 +17,15 @@ NAMESPACE = {
 }
 
 
+def _get_feed_url(podcast):
+    if playlist := podcast.get("playlist", None):
+        return f'https://www.youtube.com/feeds/videos.xml?playlist_id={playlist}'
+    return f'https://www.youtube.com/feeds/videos.xml?channel_id={podcast["channel_id"]}'
+
+
 def main():
     for podcast in PODCASTS:
-        feed_url = f'https://www.youtube.com/feeds/videos.xml?channel_id={podcast["channel_id"]}'
-        feed = feedparser.parse(feed_url)
+        feed = feedparser.parse(_get_feed_url(podcast))
 
         try:
             new_last = last = (
