@@ -64,11 +64,13 @@ def _download_video(videoid):
 
 
 def main(videoid, location):
-    while (result := _download_video(videoid)).returncode:
+    retries = 5
+    while retries and (result := _download_video(videoid)).returncode:
         if "Private video." in result.stderr.decode("utf-8"):
             print(result.stderr)
             return
         time.sleep(5)
+        retries -= 1
 
     mp3_file = _get_video_mp3(videoid)
 
