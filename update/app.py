@@ -49,10 +49,8 @@ def main(location):
     fg.link(href=base_url, rel="self")
     fg.description("Youtube feed converted to audio only")
 
-    for objsum in BUCKET.objects.all():
+    for objsum in BUCKET.objects.filter(Prefix=location):
         if not objsum.key.endswith("mp3"):
-            continue
-        if not objsum.key.startswith(location):
             continue
         obj = objsum.Object()
         print(obj.metadata)
