@@ -62,6 +62,9 @@ def queue_video(title, videoid, location):
             ),
         )
     )
+    BUCKET.Object(key=f'{location}/last.txt').put(
+        Body=videoid.encode("utf-8")
+    )
 
 
 def handler(event, context):
