@@ -50,8 +50,8 @@ def _get_video(videoid):
     return json.load(urlopen(req))["items"][0]
 
 
-def main(videoid, location):
-    while subprocess.run(
+def _download_video(videoid):
+    return subprocess.run(
         (
             "python3 -m yt_dlp -c -x "
             '--audio-format mp3 -o "/tmp/%(title)s[%(id)s].%(ext)s" '
@@ -59,7 +59,15 @@ def main(videoid, location):
             f"{videoid}"
         ),
         shell=True,
-    ).returncode:
+        stderr=subprocess.PIPE,
+    )
+
+
+def main(videoid, location):
+    while (result := _download_video(videoid)).returncode:
+        if "Private video." in result.stderr.decode("utf-8"):
+            print(result.stderr)
+            return
         time.sleep(5)
 
     mp3_file = _get_video_mp3(videoid)
