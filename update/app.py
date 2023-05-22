@@ -103,7 +103,6 @@ def main(location):
                 "Items": [f"/{location}/{os.path.basename(xml)}"],
             },
         },
-        CallerReference=uuid.uuid4().hex,
     )
 
 
