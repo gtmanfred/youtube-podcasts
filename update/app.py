@@ -100,7 +100,7 @@ def main(location):
                 "Quantity": 1,
                 "Items": [f"/{location}/{os.path.basename(xml)}"],
             },
-            CallerReference=uuid.uuid4().hex,
+            "CallerReference": uuid.uuid4().hex,
         },
     )
 
