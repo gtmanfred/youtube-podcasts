@@ -28,7 +28,11 @@ def _get_video(videoid):
         method="GET",
         url=url,
     )
-    return json.load(urlopen(req))["items"][0]
+    
+    videos = json.load(urlopen(req))["items"]
+    if not videos:
+        return {"snippet": {"description": ""}}
+    return videos[0]
 
 
 def main(location):
