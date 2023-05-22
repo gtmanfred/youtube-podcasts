@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import uuid
@@ -68,7 +69,7 @@ def main(location):
         if description is None:
             video = _get_video(obj.metadata["videoid"])
             description = video["snippet"]["description"]
-            obj.metadata.update({"description": base64.b64encode(description.decode("utf-8"})
+            obj.metadata.update({"description": base64.b64encode(description.encode("utf-8")).decode("utf-8")})
             obj.copy_from(
                 CopySource={
                     'Bucket': BUCKET_NAME,
