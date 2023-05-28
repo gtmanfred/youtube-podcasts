@@ -63,7 +63,17 @@ def _download_video(videoid):
     )
 
 
+def _check_video_exists(videoid, location):
+    for obj in BUCKET.objects.filter(Prefix=location):
+        if videoid in obj.key:
+            return True
+    return False
+
+
 def main(videoid, location):
+    if _check_video_exists(videoid, location):
+        return
+
     retries = 5
     while retries and (result := _download_video(videoid)).returncode:
         if "Private video." in result.stderr.decode("utf-8"):
