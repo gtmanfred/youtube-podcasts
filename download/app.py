@@ -55,7 +55,7 @@ def _download_video(videoid):
         (
             "python3 -m yt_dlp -c -x "
             '--audio-format mp3 -o "/tmp/%(title)s[%(id)s].%(ext)s" '
-            "--cache-dir /tmp/yt-dlp/ -- "
+            "-vvv --cache-dir /tmp/yt-dlp/ -- "
             f"{videoid}"
         ),
         shell=True,
