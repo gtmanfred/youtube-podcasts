@@ -35,7 +35,7 @@ def _get_video(videoid):
     return videos[0]
 
 
-def _get_channel_thumbnail(channel_id):
+def _get_channel_thumbnail(channel_id, location):
     url = f"https://www.googleapis.com/youtube/v3/channels?key={APIKEY}&id={channel_id}&part=snippet"
     req = Request(
         method="GET",
@@ -45,7 +45,15 @@ def _get_channel_thumbnail(channel_id):
     if not channels:
         return {"snippet": {"thumbnails": {"default": {"url": "https://http.cat/404"}}}}
     thumbnails = channels[0]["snippet"]["thumbnails"]
-    return thumbnails["high"]["url"] if "high" in thumbnails else thumbnails["default"]["url"]
+    image_url = thumbnails["high"]["url"] if "high" in thumbnails else thumbnails["default"]["url"]
+    BUCKET.upload_fileobj(
+        urlopen(image_url),
+        Key=f"{location}/logo.jpg",
+        ExtraArgs={
+            "ContentType": "image/jpeg",
+        },
+    )
+
 
 
 def main(location):
@@ -55,6 +63,7 @@ def main(location):
     podcasts = json.load(BUCKET.Object(key="podcasts.json").get()["Body"])
     for podcast in podcasts:
         if podcast["location"] == location:
+            _get_channel_thumbnail(podcast["channel_id"], location)
             break
     else:
         return
@@ -63,7 +72,9 @@ def main(location):
     fg.title(podcast["title"])
     fg.author(podcast["author"])
     fg.language("en")
-    fg.podcast.itunes_image = _get_channel_thumbnail(podcast["channel_id"])
+    fg.logo(f"{base_url}/logo.jpg")
+    fg.image(f"{base_url}/logo.jpg", title=podcast["title"])
+    fg.podcast.itunes_image(f"{base_url}/logo.jpg")
     fg.podcast.itunes_explicit("no")
     fg.podcast.itunes_category({"cat": "Leisure", "sub": "Games"})
     fg.link(href=f"{base_url}/podcast.xml", rel="self")
@@ -102,7 +113,6 @@ def main(location):
             ).replace(tzinfo=pytz.UTC)
         )
         fe.podcast.itunes_duration(obj.metadata["duration"])
-        fe.podcast.itunes_image(obj.metadata["image"])
 
     xml = "/tmp/podcast.xml"
     fg.rss_file(xml)
