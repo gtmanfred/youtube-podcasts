@@ -35,6 +35,19 @@ def _get_video(videoid):
     return videos[0]
 
 
+def _get_channel_thumbnail(channel_id):
+    url = f"https://www.googleapis.com/youtube/v3/channels?key={APIKEY}&id={channel_id}&part=snippet"
+    req = Request(
+        method="GET",
+        url=url,
+    )
+    channels = json.load(urlopen(req))["items"]
+    if not channels:
+        return {"snippet": {"thumbnails": {"default": {"url": "https://http.cat/404"}}}}
+    thumbnails = channels[0]["snippet"]["thumbnails"]
+    return thumbnails["high"]["url"] if "high" in thumbnails else thumbnails["default"]["url"]
+
+
 def main(location):
     fg = FeedGenerator()
     fg.load_extension("podcast")
@@ -50,7 +63,10 @@ def main(location):
     fg.title(podcast["title"])
     fg.author(podcast["author"])
     fg.language("en")
-    fg.link(href=base_url, rel="self")
+    fg.podcast.itunes_image = _get_channel_thumbnail(podcast["channel_id"])
+    fg.podcast.itunes_explicit("no")
+    fg.podcast.itunes_category({"cat": "Leisure", "sub": "Games"})
+    fg.link(href=f"{base_url}/podcast.xml", rel="self")
     fg.description("Youtube feed converted to audio only")
 
     for objsum in BUCKET.objects.filter(Prefix=location):
