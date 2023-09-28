@@ -75,9 +75,9 @@ def main(location):
     fg.logo(f"{base_url}/logo.jpg")
     fg.image(f"{base_url}/logo.jpg", title=podcast["title"])
     fg.podcast.itunes_image(f"{base_url}/logo.jpg")
-    fg.podcast.itunes_explicit("false")
+    fg.podcast.itunes_explicit("no")
     fg.podcast.itunes_category({"cat": "Leisure", "sub": "Games"})
-    fg.podcast.itunes_email("danielwallace@gtmanfred.com")
+    fg.podcast.itunes_author("danielwallace@gtmanfred.com")
     fg.link(href=f"{base_url}/podcast.xml", rel="self")
     fg.description("Youtube feed converted to audio only")
 
