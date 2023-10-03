@@ -29,4 +29,10 @@
     "author": {"name": "fatherben", "email": "email@example.com"},
     "description": "Youtube feed converted to audio only",
     "channel_id": "UCUUC1SxlL-z2GWrzm8gIdYA"
+},{
+    "title": "STEPH INFECTION's Actual Play Youtube",
+    "author": {"name": "Stephanie Williams", "email": "email@example.com"},
+    "description": "Youtube feed converted to audio only",
+    "channel_id": "UCfmflTEULl1TJxX3WUcLqJg",
+    "location": "podcasts/stephinfection"
 }]
