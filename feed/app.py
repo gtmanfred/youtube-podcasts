@@ -43,6 +43,9 @@ def main():
             if idx == 0:
                 new_last = item.yt_videoid
             queue_video(item.title, item.yt_videoid, podcast["location"])
+        BUCKET.Object(key=f'{podcast["location"]}/last.txt').put(
+            Body=new_last,
+        )
 
 
 def queue_video(title, videoid, location):
@@ -58,9 +61,6 @@ def queue_video(title, videoid, location):
                 }
             ),
         )
-    )
-    BUCKET.Object(key=f'{location}/last.txt').put(
-        Body=videoid.encode("utf-8")
     )
 
 
