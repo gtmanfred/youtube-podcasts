@@ -35,4 +35,10 @@
     "description": "Youtube feed converted to audio only",
     "channel_id": "UCfmflTEULl1TJxX3WUcLqJg",
     "location": "podcasts/stephinfection"
+},{
+    "title": "Alex Rybitski's Actual Play Youtube",
+    "author": {"name": "Alex Rybitski", "email": "email@example.com"},
+    "description": "Youtube feed converted to audio only",
+    "channel_id": "UC2Rg2PV6QYXkknk8GIobAuA",
+    "location": "podcasts/xanderbimski"
 }]

@@ -1,18 +1,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
 	<title>Podcasts</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.get("/podcasts.json", function(data) {
+                console.log(data)
+                $.each(data, function(entry) {
+                    $("#feeds").append(
+                        `<li><a href='/${data[entry].location}/podcast.xml'>${data[entry].title}</a></li>`
+                    )
+                })
+            })
+        })
+    </script>
 </head>
 <body>
   <h1>Youtube videos converted to podcasts.</h1>
   <p>Now hosted on Amazon S3!</p>
   <h2>Feeds</h2>
-  <ul>
-    <li><a href='/podcasts/jasoncordova/podcast.xml'>Jason Cordova's Youtube Feed</a></li>
-    <li><a href='/podcasts/tpk/podcast.xml'>Total Party Kiss' Youtube Feed</a></li>
-    <li><a href='/podcasts/crit-fail-safe/podcast.xml'>Crit Fail Safe's Youtube Feed</a></li>
-    <li><a href='/podcasts/holy-happy-hour/podcast.xml'>Holy Happy Hour, Batman!'s Youtube Feed</a></li>
-    <li><a href='/podcasts/marcmajcher/podcast.xml'>Marc Majcher's Youtube Feed</a></li>
-    <li><a href='/podcasts/stephinfection/podcast.xml'>STEPH INFECTION's Actual Play Youtube</a></li>
+  <ul id="feeds">
   </ul>
   <h2>Info</h2>
   <p>If you would like to have your video feed appear here, please reach out to</p>
