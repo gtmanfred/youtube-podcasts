@@ -41,4 +41,11 @@
     "description": "Youtube feed converted to audio only",
     "channel_id": "UC2Rg2PV6QYXkknk8GIobAuA",
     "location": "podcasts/xanderbimski"
+},{
+    "title": "The Silt Verses RPG: A Psalm of Flesh and Change",
+    "author": {"name": "The Silt Verses", "email": "email@example.com"},
+    "description": "Youtube feed for The Silt Verses Video",
+    "channel_id": "9_TScAhX3EA",
+    "playlist": "PLS9JweErxU8R4ZkAcJQ-Edbak9miDMaKP",
+    "location": "podcasts/tsv"
 }]
