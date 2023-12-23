@@ -41,7 +41,7 @@ def _get_channel_thumbnail(channel_id, location):
         method="GET",
         url=url,
     )
-    channels = json.load(urlopen(req))["items"]
+    channels = json.load(urlopen(req)).get("items", [])
     if not channels:
         return {"snippet": {"thumbnails": {"default": {"url": "https://http.cat/404"}}}}
     thumbnails = channels[0]["snippet"]["thumbnails"]
