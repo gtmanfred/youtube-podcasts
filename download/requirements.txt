@@ -1,2 +1,2 @@
 boto3
-yt-dlp==2024.07.25
+yt-dlp

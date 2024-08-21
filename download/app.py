@@ -59,7 +59,7 @@ def _download_video(videoid):
             f"{videoid}"
         ),
         shell=True,
-        stderr=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
     )
 
 
