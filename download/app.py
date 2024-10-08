@@ -3,6 +3,7 @@ import glob
 import json
 import os
 import subprocess
+import threading
 import time
 from datetime import datetime
 from urllib.request import Request
@@ -12,6 +13,7 @@ import boto3
 
 BUCKET_NAME = "podcasts.gtmanfred.com"
 BUCKET = boto3.resource("s3").Bucket(name=BUCKET_NAME)
+QUEUE_URL = "https://sqs.us-east-1.amazonaws.com/599874236268/download-youtube-audio"
 
 
 APIKEY = os.getenv("YOUTUBE_API_KEY")
@@ -70,7 +72,7 @@ def _check_video_exists(videoid, location):
     return False
 
 
-def main(videoid, location):
+def run(videoid, location):
     if _check_video_exists(videoid, location):
         return
 
@@ -103,10 +105,54 @@ def main(videoid, location):
     )
 
 
-def handler(event, context):
-    print(event, context)
+def __msg_keepalive(event, handle):
+    client = boto3.client("sqs")
+    while True:
+        if event.is_set():
+            break
 
-    main(**event)
+        client.change_message_visibility(
+            QueueUrl=QUEUE_URL,
+            ReceiptHandle=handle,
+            VisibilityTimeout=30,
+        )
+        event.wait(15)
+
+
+def main():
+    timeout = 30
+    client = boto3.client("sqs")
+    while True:
+        messages = client.receive_message(
+            QueueUrl=QUEUE_URL,
+            VisibilityTimeout=timeout,
+            WaitTimeSeconds=5,
+        )
+        for msg in messages["Messages"]:
+            retcode = 1
+            stop_event = threading.Event()
+
+            try:
+                thread = threading.Thread(
+                    target=__msg_keepalive,
+                    args=(stop_event, msg["ReceiptHandle"]),
+                )
+                thread.daemon = True
+                thread.start()
+
+                retcode = run(**json.loads(msg["Body"]))
+
+            except Exception:
+                pass
+
+            else:
+                client.delete_message(
+                    QueueUrl=QUEUE_URL,
+                    ReceiptHandle=msg["ReceiptHandle"],
+                )
+
+            finally:
+                stop_event.set()
 
 
 if __name__ == "__main__":
