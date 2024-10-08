@@ -1,4 +1,5 @@
 import json
+import traceback
 from xml.etree import ElementTree as ET
 
 import boto3
@@ -8,7 +9,7 @@ BUCKET_NAME = "podcasts.gtmanfred.com"
 BUCKET = boto3.resource("s3").Bucket(name=BUCKET_NAME)
 s3 = boto3.client("s3")
 
-client = boto3.client("lambda")
+client = boto3.client("sqs")
 
 PODCASTS = json.load(BUCKET.Object(key="podcasts.json").get()["Body"])
 NAMESPACE = {
@@ -49,19 +50,19 @@ def main():
 
 
 def queue_video(title, videoid, location):
-    print(f"Processing: {title}")
-    print(
-        client.invoke(
-            FunctionName="download-youtube-audio",
-            InvocationType="Event",
-            Payload=json.dumps(
-                {
+    try:
+        print(f"Processing: {title}")
+        print(
+            client.send_message(
+                QueueUrl="https://sqs.us-east-1.amazonaws.com/599874236268/download-youtube-audio",
+                Message=json.dumps({
                     "videoid": videoid,
                     "location": location,
-                }
-            ),
+                }),
+            )
         )
-    )
+    except Exception:
+        print(traceback.format_exc())
 
 
 def handler(event, context):
@@ -80,10 +81,6 @@ def handler(event, context):
         channel_id = entry.find("yt:channelId", NAMESPACE).text
         for podcast in PODCASTS:
             if podcast["channel_id"] == channel_id:
-                event = {
-                    "videoid": videoid,
-                    "location": podcast["location"],
-                }
                 break
         else:
             raise Exception("podcast not tracked")
