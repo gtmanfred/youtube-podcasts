@@ -55,7 +55,7 @@ def queue_video(title, videoid, location):
         print(
             client.send_message(
                 QueueUrl="https://sqs.us-east-1.amazonaws.com/599874236268/download-youtube-audio",
-                Message=json.dumps({
+                MessageBody=json.dumps({
                     "videoid": videoid,
                     "location": location,
                 }),
