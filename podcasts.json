@@ -48,4 +48,11 @@
     "channel_id": "9_TScAhX3EA",
     "playlist": "PLS9JweErxU8R4ZkAcJQ-Edbak9miDMaKP",
     "location": "podcasts/tsv"
+},{
+    "title": "Knot by Knot, Fathom by Fathom",
+    "author": {"name": "Carrion Comfort", "email": "email@example.com"},
+    "description": "Youtube feed for Carrion Comfort Unsinkable Playlist",
+    "channel_id": "UCAhkhkh-yXV6ut5OWCqUw9g",
+    "playlist": "PLG1C83Zy5MfHnIK7vY85P09QS6IuhbYXu",
+    "location": "podcaasts/fathom"
 }]

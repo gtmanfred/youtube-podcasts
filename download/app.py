@@ -2,6 +2,7 @@ import base64
 import glob
 import json
 import os
+import sys
 import subprocess
 import threading
 import time
@@ -61,7 +62,6 @@ def _download_video(videoid):
             f"{videoid}"
         ),
         shell=True,
-        stderr=subprocess.STDOUT,
     )
 
 
@@ -84,11 +84,15 @@ def run(videoid, location):
         time.sleep(5)
         retries -= 1
 
+    print("Get MP3 file")
     mp3_file = _get_video_mp3(videoid)
+    print(f"MP3 file: {mp3_file=}")
 
+    print(f"Get Video")
     video = _get_video(videoid)
+    print(f"Video: {video=}")
 
-    BUCKET.upload_file(
+    resp = BUCKET.upload_file(
         Filename=mp3_file,
         Key=f"{location}/{os.path.basename(mp3_file)}",
         ExtraArgs={
@@ -103,6 +107,7 @@ def run(videoid, location):
             "ContentType": "audio/mpeg",
         },
     )
+    print(resp)
 
 
 def __msg_keepalive(event, handle):
@@ -128,7 +133,8 @@ def main():
             VisibilityTimeout=timeout,
             WaitTimeSeconds=5,
         )
-        for msg in messages["Messages"]:
+        print(f"MESSAGES: {messages}")
+        for msg in messages.get("Messages", []):
             retcode = 1
             stop_event = threading.Event()
 
@@ -140,7 +146,7 @@ def main():
                 thread.daemon = True
                 thread.start()
 
-                retcode = run(**json.loads(msg["Body"]))
+                run(**json.loads(msg["Body"]))
 
             except Exception:
                 pass
@@ -156,4 +162,5 @@ def main():
 
 
 if __name__ == "__main__":
+    sys.stdout = sys.stderr
     main()
