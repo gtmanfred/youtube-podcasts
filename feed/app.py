@@ -1,9 +1,11 @@
 import json
 import traceback
+from urllib.parse import urlparse, parse_qs
 from xml.etree import ElementTree as ET
 
 import boto3
 import feedparser
+import requests
 
 BUCKET_NAME = "podcasts.gtmanfred.com"
 BUCKET = boto3.resource("s3").Bucket(name=BUCKET_NAME)
@@ -20,12 +22,15 @@ NAMESPACE = {
 
 def _get_feed_url(podcast):
     if playlist := podcast.get("playlist", None):
+        if podcast.get("unlisted", False) is True:
+            return requests.get(f"https://rsshub.app/youtube/playlist/{playlist}").text
         return f'https://www.youtube.com/feeds/videos.xml?playlist_id={playlist}'
     return f'https://www.youtube.com/feeds/videos.xml?channel_id={podcast["channel_id"]}'
 
 
 def main():
     for podcast in PODCASTS:
+        new_last = None
         feed = feedparser.parse(_get_feed_url(podcast))
 
         try:
@@ -39,14 +44,21 @@ def main():
         except s3.exceptions.NoSuchKey:
             last = None
         for idx, item in enumerate(feed.entries):
-            if item.yt_videoid == last:
+            if podcast.get("unlisted", False) is True:
+                videoid = parse_qs(urlparse(item.link).query)["v"][0]
+            else:
+                videoid = item.yt_videoid
+
+            if videoid == last:
                 break
             if idx == 0:
-                new_last = item.yt_videoid
-            queue_video(item.title, item.yt_videoid, podcast["location"])
-        BUCKET.Object(key=f'{podcast["location"]}/last.txt').put(
-            Body=new_last,
-        )
+                new_last = videoid
+
+            queue_video(item.title, videoid, podcast["location"])
+        if new_last is not None:
+            BUCKET.Object(key=f'{podcast["location"]}/last.txt').put(
+                Body=new_last,
+            )
 
 
 def queue_video(title, videoid, location):
