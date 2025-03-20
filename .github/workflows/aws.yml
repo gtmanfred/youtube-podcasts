@@ -15,7 +15,6 @@ jobs:
       matrix:
         include:
         - app: download
-          function: download-youtube-audio
         - app: feed
           function: process-youtube-feeds
         - app: update
@@ -47,6 +46,7 @@ jobs:
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
     - name: update-function
+      if: ${{ matrix.function }}
       env:
         IMAGE_URI: ${{ steps.build.outputs.image }}
       run: |
