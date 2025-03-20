@@ -56,4 +56,10 @@
     "playlist": "PLG1C83Zy5MfHnIK7vY85P09QS6IuhbYXu",
     "location": "podcasts/fathom",
     "unlisted": true
+},{
+    "title": "Glowing Roots Press Actual Play Youtube",
+    "author": {"name": "Gabriel Robinson", "email": "email@example.com"},
+    "description": "Youtube feed for Glowing Roots Press",
+    "channel_id": "UCMEQIRVg7e_a9qYbX5iSHVg",
+    "location": "podcasts/glowingrootspress"
 }]
