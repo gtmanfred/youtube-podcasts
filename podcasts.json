@@ -62,4 +62,10 @@
     "description": "Youtube feed for Glowing Roots Press",
     "channel_id": "UCMEQIRVg7e_a9qYbX5iSHVg",
     "location": "podcasts/glowingrootspress"
+},{
+    "title": "Chaotic's TTRPG Library",
+    "author": {"name": "Chaoticblade5", "email": "email@example.com"},
+    "description": "Youtube feed for ChatoicBlade5",
+    "channel_id": "UC6do_HGMyNAKLB0jHRjKXHw",
+    "location": "podcasts/chaotic-ttrpg-library"
 }]
