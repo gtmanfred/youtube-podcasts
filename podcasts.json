@@ -68,4 +68,10 @@
     "description": "Youtube feed for ChatoicBlade5",
     "channel_id": "UC6do_HGMyNAKLB0jHRjKXHw",
     "location": "podcasts/chaotic-ttrpg-library"
+},{
+    "title": "Sprigs & Kindling Youtube",
+    "author": {"name": "Ms. T. Rex", "email": "email@example.com"},
+    "description": "Youtube feed for Sprigs & Kindling",
+    "channel_id": "UC7uS_3s4xBrvVOQ7UCjT83g",
+    "location": "podcasts/sprigs-and-kindling"
 }]
