@@ -74,4 +74,11 @@
     "description": "Youtube feed for Sprigs & Kindling",
     "channel_id": "UC7uS_3s4xBrvVOQ7UCjT83g",
     "location": "podcasts/sprigs-and-kindling"
+},{
+    "title": "Mike Martens' Planet Raygun Actual Play Youtube",
+    "author": {"name": "Mike Martens", "email": "email@example.com"},
+    "description": "Youtube feed converted to audio only",
+    "channel_id": "UCr4VWE7F0999a3Apa_sX-VA",
+    "location": "podcasts/mm-planet-raygun",
+    "playlist": "PLcYqSt8vLTNjY2eyqEZlkjZLKliFRTiWg"
 }]
