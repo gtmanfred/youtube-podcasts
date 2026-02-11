@@ -80,5 +80,6 @@
     "description": "Youtube feed converted to audio only",
     "channel_id": "UCr4VWE7F0999a3Apa_sX-VA",
     "location": "podcasts/mm-planet-raygun",
-    "playlist": "PLcYqSt8vLTNjY2eyqEZlkjZLKliFRTiWg"
+    "playlist": "PLcYqSt8vLTNjY2eyqEZlkjZLKliFRTiWg",
+    "unlisted": true
 }]
