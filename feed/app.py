@@ -23,7 +23,7 @@ NAMESPACE = {
 def _get_feed_url(podcast):
     if playlist := podcast.get("playlist", None):
         if podcast.get("unlisted", False) is True:
-            return requests.get(f"https://rsshub.app/youtube/playlist/{playlist}").text
+            return requests.get(f"https://rsshub.cups.moe/youtube/playlist/{playlist}").text
         return f'https://www.youtube.com/feeds/videos.xml?playlist_id={playlist}'
     return f'https://www.youtube.com/feeds/videos.xml?channel_id={podcast["channel_id"]}'
 
@@ -31,6 +31,7 @@ def _get_feed_url(podcast):
 def main():
     for podcast in PODCASTS:
         new_last = None
+        print(_get_feed_url(podcast))
         feed = feedparser.parse(_get_feed_url(podcast))
 
         try:
