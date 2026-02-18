@@ -31,7 +31,6 @@ def _get_feed_url(podcast):
 def main():
     for podcast in PODCASTS:
         new_last = None
-        print(_get_feed_url(podcast))
         feed = feedparser.parse(_get_feed_url(podcast))
 
         try:
@@ -45,12 +44,13 @@ def main():
         except s3.exceptions.NoSuchKey:
             last = None
         for idx, item in enumerate(feed.entries):
-            if podcast.get("unlisted", False) is True:
+            unlisted = podcast.get("unlisted", False)
+            if unlisted is True:
                 videoid = parse_qs(urlparse(item.link).query)["v"][0]
             else:
                 videoid = item.yt_videoid
 
-            if videoid == last:
+            if unlisted is not True and videoid == last:
                 break
             if idx == 0:
                 new_last = videoid
