@@ -43,8 +43,8 @@ def main():
             )
         except s3.exceptions.NoSuchKey:
             last = None
+        unlisted = podcast.get("unlisted", False)
         for idx, item in enumerate(feed.entries):
-            unlisted = podcast.get("unlisted", False)
             if unlisted is True:
                 videoid = parse_qs(urlparse(item.link).query)["v"][0]
             else:
